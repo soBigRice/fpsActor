@@ -34,10 +34,10 @@ export class Game {
         // 初始化输入管理器
         this.inputManager = new InputManager();
 
-        // 初始化世界
-        this.world = new World(this.scene, this.physicsWorld);
+        // 创建游戏世界
+        this.world = new World(this.scene, this.physicsWorld, this.camera);
 
-        // 初始化玩家
+        // 创建玩家
         this.player = new Player(this.camera, this.inputManager, this.scene, this.physicsWorld, this.world);
 
         // 创建帧率显示器

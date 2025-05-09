@@ -1,64 +1,164 @@
-# FPS Actor
+# FPS Actor Game
 
-一个基于Three.js和Cannon.js的简单FPS射击游戏。这个项目展示了如何使用现代Web技术创建一个3D射击游戏。
+一个基于 Three.js 和 Cannon.js 的第一人称射击游戏。
 
 ## 功能特点
 
-- 🎮 第一人称视角控制
-- 🎯 鼠标瞄准系统
-- 🔫 物理子弹系统
-- 🎯 屏幕中央准星
-- 📊 实时FPS显示
-- 🎯 随机生成的障碍物
-- 💯 计分系统
-- 🎯 物理碰撞检测
+- 第一人称视角控制
+- 物理引擎支持
+- 随机生成的障碍物
+- 计分系统
+- 准星显示
+- 帧率显示
+- 障碍物生命值显示
 
 ## 技术栈
 
-- Three.js - 3D图形渲染
+- Three.js - 3D 渲染引擎
 - Cannon.js - 物理引擎
-- TypeScript - 类型安全的JavaScript超集
-- Vite - 现代前端构建工具
+- TypeScript - 编程语言
+- Vite - 构建工具
 
-## 安装
+## 安装步骤
 
-1. 克隆仓库：
+1. 克隆仓库
 ```bash
-git clone [repository-url]
-cd fps-actor
+git clone https://github.com/soBigRice/fpsActor.git
+cd fpsActor
 ```
 
-2. 安装依赖：
+2. 安装依赖
 ```bash
 npm install
 ```
 
-3. 启动开发服务器：
+3. 启动开发服务器
 ```bash
 npm run dev
 ```
 
-4. 构建生产版本：
+4. 构建生产版本
 ```bash
 npm run build
 ```
 
 ## 游戏控制
 
-- 点击游戏窗口 - 锁定鼠标
-- 鼠标移动 - 瞄准
+- 点击游戏窗口锁定鼠标
+- WASD - 移动
+- 鼠标 - 视角控制
 - 左键点击 - 射击
-- ESC键 - 解锁鼠标
+- ESC - 解锁鼠标
 
 ## 游戏玩法
 
-1. 点击游戏窗口开始
-2. 使用鼠标瞄准
-3. 点击左键射击
-4. 击中障碍物获得分数
-5. 每个障碍物需要3次击中才能被摧毁
-6. 击中障碍物获得10分
-7. 摧毁障碍物获得100分
+- 射击障碍物获得分数
+- 每个障碍物需要击中三次才会消失
+- 击中障碍物获得 10 分
+- 摧毁障碍物获得 100 分
+
+## 开发说明
+
+### 项目结构
+
+```
+src/
+├── core/           # 核心游戏逻辑
+├── entities/       # 游戏实体
+├── physics/        # 物理引擎相关
+└── world/          # 游戏世界
+```
+
+### 主要类
+
+- `Game` - 游戏主类
+- `Player` - 玩家控制
+- `Bullet` - 子弹系统
+- `Obstacle` - 障碍物
+- `World` - 游戏世界管理
+- `PhysicsWorld` - 物理世界管理
+
+---
+
+# FPS Actor Game
+
+A first-person shooter game based on Three.js and Cannon.js.
+
+## Features
+
+- First-person perspective control
+- Physics engine support
+- Randomly generated obstacles
+- Scoring system
+- Crosshair display
+- FPS counter
+- Obstacle health display
+
+## Tech Stack
+
+- Three.js - 3D rendering engine
+- Cannon.js - Physics engine
+- TypeScript - Programming language
+- Vite - Build tool
+
+## Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/soBigRice/fpsActor.git
+cd fpsActor
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Start development server
+```bash
+npm run dev
+```
+
+4. Build for production
+```bash
+npm run build
+```
+
+## Game Controls
+
+- Click game window to lock mouse
+- WASD - Movement
+- Mouse - Camera control
+- Left click - Shoot
+- ESC - Unlock mouse
+
+## Gameplay
+
+- Shoot obstacles to earn points
+- Each obstacle requires three hits to be destroyed
+- Hit obstacle: 10 points
+- Destroy obstacle: 100 points
+
+## Development
+
+### Project Structure
+
+```
+src/
+├── core/           # Core game logic
+├── entities/       # Game entities
+├── physics/        # Physics engine related
+└── world/          # Game world
+```
+
+### Main Classes
+
+- `Game` - Main game class
+- `Player` - Player control
+- `Bullet` - Bullet system
+- `Obstacle` - Obstacles
+- `World` - Game world management
+- `PhysicsWorld` - Physics world management
 
 ## 项目结构
 

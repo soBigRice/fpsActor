@@ -11,10 +11,13 @@ export class World {
     private readonly obstacleSpawnInterval: number = 5; // 每5秒尝试生成新障碍物
     private lastSpawnTime: number = 0;
     private score: number = 0;
+    private scoreDisplay: HTMLDivElement | null = null;
+    private camera: THREE.PerspectiveCamera;
 
-    constructor(scene: THREE.Scene, physicsWorld: PhysicsWorld) {
+    constructor(scene: THREE.Scene, physicsWorld: PhysicsWorld, camera: THREE.PerspectiveCamera) {
         this.scene = scene;
         this.physicsWorld = physicsWorld;
+        this.camera = camera;
 
         // 添加环境光
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -53,24 +56,26 @@ export class World {
     }
 
     private createScoreDisplay(): void {
-        // 创建分数显示
-        const scoreElement = document.createElement('div');
-        scoreElement.style.position = 'absolute';
-        scoreElement.style.top = '20px';
-        scoreElement.style.left = '20px';
-        scoreElement.style.color = 'white';
-        scoreElement.style.fontSize = '24px';
-        scoreElement.style.fontFamily = 'Arial';
-        scoreElement.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5)';
-        scoreElement.id = 'score';
-        document.body.appendChild(scoreElement);
-        this.updateScoreDisplay();
+        const scoreDiv = document.createElement('div');
+        scoreDiv.style.position = 'absolute';
+        scoreDiv.style.top = '20px';
+        scoreDiv.style.right = '20px';
+        scoreDiv.style.color = 'white';
+        scoreDiv.style.fontSize = '24px';
+        scoreDiv.style.fontFamily = 'Arial, sans-serif';
+        scoreDiv.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.5)';
+        scoreDiv.style.padding = '10px';
+        scoreDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        scoreDiv.style.borderRadius = '5px';
+        scoreDiv.style.zIndex = '1000';
+        scoreDiv.textContent = `Score: ${this.score}`;
+        document.body.appendChild(scoreDiv);
+        this.scoreDisplay = scoreDiv;
     }
 
     private updateScoreDisplay(): void {
-        const scoreElement = document.getElementById('score');
-        if (scoreElement) {
-            scoreElement.textContent = `Score: ${this.score}`;
+        if (this.scoreDisplay) {
+            this.scoreDisplay.textContent = `Score: ${this.score}`;
         }
     }
 
@@ -89,7 +94,7 @@ export class World {
             1 + Math.random() * 2
         );
 
-        const obstacle = new Obstacle(position, size, this.physicsWorld);
+        const obstacle = new Obstacle(position, size, this.physicsWorld, this.camera);
         this.obstacles.push(obstacle);
         this.scene.add(obstacle.getMesh());
     }
@@ -120,6 +125,11 @@ export class World {
         if (currentTime - this.lastSpawnTime >= this.obstacleSpawnInterval) {
             this.spawnObstacle();
             this.lastSpawnTime = currentTime;
+        }
+
+        // 更新所有障碍物
+        for (const obstacle of this.obstacles) {
+            obstacle.update();
         }
 
         // 清理已销毁的障碍物

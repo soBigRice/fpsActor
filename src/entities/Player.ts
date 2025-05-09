@@ -22,6 +22,7 @@ export class Player {
     private readonly tempVector: THREE.Vector3; // 重用向量对象
     private nextBulletIndex: number = 0; // 下一个要使用的子弹索引
     private crosshair: THREE.Mesh;
+    private bulletCount: number = 0;
 
     constructor(camera: THREE.PerspectiveCamera, inputManager: InputManager, scene: THREE.Scene, physicsWorld: PhysicsWorld, world: World) {
         this.camera = camera;
@@ -101,7 +102,10 @@ export class Player {
         }
 
         // 更新子弹
-        this.updateBullets(delta);
+        this.updateBullets();
+        
+        // 更新物理
+        this.updatePhysics(delta);
     }
 
     private handleShooting(delta: number): void {
@@ -113,52 +117,34 @@ export class Player {
     }
 
     private shoot(): void {
-        // 检查是否达到最大子弹数
-        if (this.bullets.length >= this.maxBullets) {
-            return;
-        }
+        if (this.bulletCount >= this.maxBullets) return;
 
-        // 从对象池中获取下一个可用的子弹
-        let bullet = this.bulletPool[this.nextBulletIndex];
+        const bullet = this.bulletPool[this.bulletCount];
+        const direction = new THREE.Vector3();
+        this.camera.getWorldDirection(direction);
         
-        // 如果当前子弹还在使用中，尝试找到下一个可用的子弹
-        if (bullet.isBulletActive()) {
-            // 遍历对象池找到第一个未激活的子弹
-            for (let i = 0; i < this.maxBullets; i++) {
-                const index = (this.nextBulletIndex + i) % this.maxBullets;
-                if (!this.bulletPool[index].isBulletActive()) {
-                    bullet = this.bulletPool[index];
-                    this.nextBulletIndex = (index + 1) % this.maxBullets;
-                    break;
-                }
-            }
-            
-            // 如果所有子弹都在使用中，直接返回
-            if (bullet.isBulletActive()) {
-                return;
-            }
-        } else {
-            this.nextBulletIndex = (this.nextBulletIndex + 1) % this.maxBullets;
-        }
-        
-        // 设置子弹位置和方向
-        this.tempVector.set(0, 0, -1).applyQuaternion(this.camera.quaternion);
-        const bulletStartPos = this.camera.position.clone().add(this.tempVector.clone().multiplyScalar(0.5));
-        
-        bullet.reset(bulletStartPos, this.tempVector.clone());
-        this.bullets.push(bullet);
+        bullet.reset(this.camera.position, direction);
+        this.scene.add(bullet.getMesh());
+        this.bulletCount++;
     }
 
-    private updateBullets(delta: number): void {
-        // 更新所有子弹
-        for (let i = this.bullets.length - 1; i >= 0; i--) {
-            const bullet = this.bullets[i];
-            bullet.update(delta);
-
-            // 移除不活跃的子弹
+    private updateBullets(): void {
+        for (let i = this.bulletCount - 1; i >= 0; i--) {
+            const bullet = this.bulletPool[i];
+            bullet.update(1/60);
+            
             if (!bullet.isBulletActive()) {
-                this.bullets.splice(i, 1);
+                this.scene.remove(bullet.getMesh());
+                this.bulletCount--;
+                if (i < this.bulletCount) {
+                    this.bulletPool[i] = this.bulletPool[this.bulletCount];
+                    this.bulletPool[this.bulletCount] = bullet;
+                }
             }
         }
+    }
+
+    private updatePhysics(delta: number): void {
+        // Implementation of updatePhysics method
     }
 } 
